@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>RailMitra.com</title>
+  
+        <link rel="stylesheet" href="css/lstyle.css"> 
+</head>
+
+<body>
+
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+
+<div class="container">
+  <div class="frame">
+    <div class="nav">
+      <ul class"links">
+        <li class="signup-active"><a class="btn">Sign up </a></li>
+      </ul>
+    </div>
+    <div>
+				      <form class="form-signin" name="form">
+          <label for="fullname">Full name</label>
+          <input class="form-styling" type="text" name="fullname" id="name" placeholder="" pattern="[789]\d{9}"required />
+          <label for="email">Email</label>
+          <input class="form-styling" type="text" name="email" id="usersid" placeholder="" required />
+          <label for="fullname">Phone Number</label>
+          <input class="form-styling" type="text" name="phone" id="phone" placeholder="" required />
+          <label>Date of Birth </label>
+          <input type="text" class="form-styling" id="dateofbirth" name="dateofbirth" placeholder="DD-MM-YYYY" required>
+          <label for="gender">Gender</label>
+          <input type="radio" id="male" name="gender" >Male<br>
+          <input type="radio" id="female" name="gender">Female<br>
+          <label for="password">Password</label>
+          <input class="form-styling" type="password" name="password" id="passs" placeholder="" required />
+          <label for="confirmpassword">Confirm password</label>
+          <input class="form-styling" type="password" name="confirmpassword" placeholder="" required />
+          <button class="btn-signup" type="button" id="usersignup">Sign Up</button>
+                </form>
+          				  </div>
+      
+      
+      </div>
+    
+</div>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
+<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+<script>
+  var config = {
+    apiKey: "AIzaSyCYxMazGHf5ABlNvGXF7LVBia0mKsgX51c",
+    authDomain: "railmitra56.firebaseapp.com",
+    databaseURL: "https://railmitra56.firebaseio.com",
+    projectId: "railmitra56",
+    storageBucket: "railmitra56.appspot.com",
+    messagingSenderId: "1056408353044"
+  };
+  firebase.initializeApp(config);
+</script>
+<script>
+
+function initApp() {
+  event.preventDefault();
+  
+  document.getElementById('usersignup').addEventListener('click', usersignup);
+
+}
+
+function usersignup(){
+var userid=document.getElementById("usersid").value;
+var pass=document.getElementById("passs").value;
+var name=document.getElementById("name").value;
+var phone=document.getElementById("phone").value;
+var dob=document.getElementById("dateofbirth").value;
+var gender = document.querySelector('input[name = "gender"]:checked').value;
+if(userid == 0|| pass == 0 || name==0 || phone==0||dob==0 ||gender==0)
+  {
+    alert("Please fill the input fields");
+  }
+  else{
+firebase.auth().createUserWithEmailAndPassword(userid.trim(), pass).then(function(user){
+var Ref=firebase.database().ref().child("users"); 
+var newActivity={"name":name,"userid":userid,"phone":phone,"id":user.uid,"dateofbirth":dob,"password":pass,"gender":gender};
+event.preventDefault();
+  console.log(newActivity);
+  Ref.child(user.uid).set(newActivity, function(err){
+ if(err){
+        alert("Data no go");
+      }
+      else
+      {
+        alert("User data has been submitted.")
+        window.open('dashboard.html',"_self");
+      }
+
+});
+}).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // ...
+   var errorCode = error.code;
+        var errorMessage = error.message;
+        // [START_EXCLUDE]
+        if (errorCode == 'auth/weak-password') {
+          alert('The password is too weak.');
+        } else {
+          alert(errorMessage);
+        }
+        console.log(error);
+});
+}}
+
+window.onload= function() {
+  initApp();
+}
+</script>
+</body>
+</html>

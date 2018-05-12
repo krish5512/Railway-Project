@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>RailMitra.com</title>
+  
+        <link rel="stylesheet" href="css/lstyle.css">
+
+  
+</head>
+
+<body>
+
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+
+<div class="container">
+  <div class="frame">
+    <div class="nav">
+      <ul class"links">
+        <li class="signin-active"><a class="btn">Log in</a></li>
+      </ul>
+    </div>
+    <div>
+				        <form class="form-signin" name="form">
+          <label for="username">Username</label>
+          <input class="form-styling" type="text" name="username" id="userid" placeholder="" required/>
+          <label for="password">Password</label>
+          <input class="form-styling" type="password" name="password" id="pass" placeholder="" required />
+          <button class="btn-signup" type="button" id="lginuser">Log in</button>
+          </div>
+				  </form>
+				  </div>
+          
+      
+      <div>
+        <div class="cover-photo"></div>
+        <div class="profile-photo">
+        </div>
+        <h1 class="welcome">Welcome, <span id="userid"></span></h1>
+        <button class="btn-goback" type="button" id="proceed">Proceed/a>
+      </div>
+  </div>
+    
+</div>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
+<script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+<script>
+  var config = {
+    apiKey: "AIzaSyCYxMazGHf5ABlNvGXF7LVBia0mKsgX51c",
+    authDomain: "railmitra56.firebaseapp.com",
+    databaseURL: "https://railmitra56.firebaseio.com",
+    projectId: "railmitra56",
+    storageBucket: "railmitra56.appspot.com",
+    messagingSenderId: "1056408353044"
+  };
+  firebase.initializeApp(config);
+</script>
+<script>
+
+function initApp() {
+  event.preventDefault();
+  console.log("hello")
+document.getElementById('lginuser').addEventListener('click', userlogin);
+}
+  
+function userlogin() {
+
+var userid=document.getElementById("userid").value;
+var pass=document.getElementById("pass").value;
+firebase.auth().signInWithEmailAndPassword(userid.trim(), pass).catch(function(error) {
+  var errorCode = error.code;
+  var errorMessage = error.message;
+   if (errorCode == 'auth/wrong-password') {
+            alert('Wrong password.');
+          } else {
+            alert(errorMessage);
+          }
+          console.log(error);
+  window.alert("Error : "+ errorMessage);
+});
+$(function() {
+  $(".btn-signin").click(function() {
+  $(".btn-animate").toggleClass("btn-animate-grow");
+  $(".welcome").toggleClass("welcome-left");
+  $(".cover-photo").toggleClass("cover-photo-down");
+  $(".frame").toggleClass("frame-short");
+  $(".profile-photo").toggleClass("profile-photo-down");
+  
+  });
+});
+
+}
+window.onload= function() {
+  initApp();
+   firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      window.alert("User signin successful");
+      setTimeout(function(){
+    console.log("wait");
+}, 2000);
+window.open('dashboard.html',"_self");
+  }                
+                     
+ });
+}
+</script>
+</body>
+</html>

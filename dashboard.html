@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>RailMitra.com</title> 
+      <link rel="stylesheet" href="css/dstyle.css"> 
+      <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script  src="js/dindex.js"></script>
+</head>
+<body>
+  <span class="bckg"></span>
+<header>
+  <h1>RailMitra.com</h1>
+  <nav>
+    <ul>
+      <li>
+        <a href="javascript:void(0);" onclick="myFunction('maindiv');" data-title="Plan Journey">Plan Journey</a>
+      </li>
+      <li>
+        <a  onclick="myFunction('planjourney');" data-title="RailMitra Suggestion">RM Suggestion</a>
+      </li>
+      <li>
+        <a onclick="myFunction('bookinghistory');" data-title="Previous Search History">Search History</a>
+      </li>
+       <li>
+        <a href="javascript:void(0);" onclick="myFunction('updatediv');">Profile Update</a>
+      </li>
+        <li>
+        <a href="javascript:void(0);" onclick="logout();" data-title="Logout">Logout</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <div class="title">
+    <h2>Dashboard</h2>
+    <a href="javascript:void(0);">Hello! <span id="displayUser"></span></a>
+  </div>
+
+  <article class="larg">
+    <p>
+    <div id="maindiv">
+      <h3>Plan Journey<span class="entypo-down-open"></span></h3>
+
+        <label><strong>Enter the source and destination station code:</strong></label><br><br>
+        <label>Source Station :</label><input type="text" name="srcstn" id="srcstn" pattern="[A-Za-z\s]+" required><br><br>
+        <label>Destination Station :</label><input type="text" name="desstn" id="desstn" pattern="[A-Za-z\s]+" required><br><br>
+        <label>Date of Journey :</label><input type="text" placeholder="DD-MM-YYYY" id="doj" maxlength="10" minlength="10" pattern="[A-Za-z\s]+" required ><br><br>
+        <label>Class :</label>
+        <select id="class" name="class" style="width:200px;">
+        <option value="EC"> EXECUTIVE CLASS</option>
+        <option value="EA">EXECUTIVE ANUBHUTI</option>
+        <option value="1A"> FIRST AC</option>
+        <option value="2A"> SECOND AC</option>
+        <option value="3A"> THIRD AC</option>
+        <option value="3E">3 AC Economy</option>
+        <option value="CC"> AC CHAIR CAR</option>
+        <option value="FC"> FIRST CLASS</option>
+        <option selected="selected" value="SL"> SLEEPER CLASS</option>
+        <option value="2S"> SECOND SEATING</option>
+        </select> <br><br>                      
+        <label>Quota :</label>
+        <select id="quota" name="quota" style="width:200px;">
+              <option value="TQ"> Tatkal Quota</option>
+              <option value="LD"> Ladies Quota</option>
+              <option value="DF"> Defence Quota</option>
+              <option value="FT"> Foreign Tourist Quota</option>
+              <option value="SS"> Lower Berth Quota</option>
+              <option value="PT"> Premium Tatkal Quota</option>
+              <option value="YU"> Yuva Quota</option>
+              <option value="DP"> Duty Pass Quota</option>
+              <option value="HP"> Handicaped Quota</option>
+              <option value="PH"> Parliament House</option>
+              <option selected="selected" value="GN"> General Quota</option>
+            </select><br>            
+        <input type="submit" name="search"  id="search" value="Search trains"/>
+        <table id="traindetails">
+         <tr>
+           <th>Train Number</th>
+           <th>Train Name</th>
+           <th>Departure from source</th>
+           <th>Arrival at destination</th>
+         </tr>
+         </table>
+        <br><br><br><br>
+        <label>Enter the train number to check the seat availability:</label>
+        <input type="text" name="tno" id="tno"><br>
+        <input type="submit" name="seats" id="seatsrch">  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        <input type="button" name="reset3" id="reset3" value="Reset" onclick="reset3();"><br><br>
+            <table id="seatdetails">
+            <tr>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </table>
+          <br><br><br>
+          <label><strong>RailMitra Has Few suggestions which can be checked in RM SUGGESTION tab.</strong></label>
+
+    </div>
+    </p>
+    <div id="updatediv" style="display: none;">
+       <h3>Profile Update <span class="entypo-down-open"></span></h3>
+      <label for="full name">Full name:</label>
+    <input type="text" id="fname"><br><br>
+    <label for="Year">Address</label>
+    <input type="text" id="address"><br><br>
+    <label for="phone">Phone number:</label>
+    <input type="text" id="phone"><br><br>
+    <label for="class10">Aadhar Id</label>
+    <input type="text" id="aadhar"><br><br>
+    <label for="class12">Password</label>
+    <input type="text" id="password" placeholder="Enter the password to update details"><br><br>
+    <br>
+    <input type="button" value="Update" id="updated">
+        </p>
+    </div>
+    <p>  
+    <div id="planjourney" style="display: none;">    
+          <h3>RailMitra Suggestions<span class="entypo-down-open"></span></h3>
+          <label><strong>The Suggestions provided here will be on the basis of the train number entered for seat availability</strong></label>
+        <br><br>
+        <label>The suggested station:  </label><input type="submit" value="Check" name="sug" id="sug"><br>
+        <span  class="srccc">Source: <span id="srcn"></span></span><label>Station Code: <span id="srcc"></span></label><br>
+        <span class="srccc">Destination: <span id="destn"></span></span><label>Station Code: <span id="destc"></span></label>
+        <br><br><br>
+         <label>Enter the source station code:</label><br><input type="text" name="stncode" id="src11"><br>
+        <label>Enter the destination station code:</label><br><input type="text" name="stncode" id="dest11"><br>
+        <input type="submit" name="avail" id="seat2" value="Check"> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        <input type="button" name="reset2" id="reset2" value="Reset" onclick="reset2();"><br><br>
+       <label>The availabilites are:</label>
+        <br>
+<table id="seatdetails2">
+            <tr>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </table>
+        <br><br>
+        <label><strong>Split The Journey:</strong></label>
+        <br>
+        <label><strong>In this RailMitra will suggest you a new destination and source station, as the journey will be splitted in two.</strong></label><br>
+        <input type="submit" name="split" value="Split" id="split"><br>
+        <br>
+        <label>New Destination from: <strong><span id="osrc"></span></strong> will be to : <strong><span id="ndest"></span>(<span id="ndestc"></span>)</strong></label><br><label>Next the Source will be from : <strong><span id="nsrc"></span> (<span id="nsrcc"></span>)</strong> to the original destination : <strong><span id="odest"></span></strong></label>
+           <br><br>  <label>Enter the source station code:</label><br><input type="text" name="stncode" id="src12"><br>
+        <label>Enter the destination station code:</label><br><input type="text" name="stncode" id="dest12"><br>
+        <input type="submit" name="avail" id="seat3" value="Check"> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        <input type="button" name="reset1" id="reset1" value="Reset" onclick="reset1();"><br><br>
+                                      <label>The availabilities are</label><br>
+                        <br><table id="seatdetails3">
+            <tr>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </table>
+            <br>
+         <h3>You can save the above jounrey with all the information.</h3>
+        <input type="submit" name="save" value="Save" id="savej">
+      
+
+</div></p>
+  </p>
+    <div id="bookinghistory" style="display: none;">
+     <h3>Booking History <span class="entypo-down-open"></span>
+      <input type="submit" name="refreshh" value="Refresh" id="refreshh"></h3>
+      <p>The details are:<br>
+        <label>Source Station: <strong><input type="text"  id="s1"></span></strong></label><br>
+        <label>Destination Station: <strong><input type="text" id="s2"></span></strong></label><br>
+        <label>Date: <strong><input type="text" id="s3"></span></strong></label><br>
+        <label>Quota: <strong><input type="text" id="s4"></span></strong></label><br>
+        <label>Train Number: <strong><input type="text" id="s5"></span></strong></label><br>
+        <label>Class: <strong><input type="text" id="s6"></span></strong></label><br>
+        <label>Suggested Source Station: <strong><input type="text" id="s7"></span></strong></label><br>
+        <label>Suggested Destination Station: <strong><input type="text" id="s8"></span></strong></label><br>
+        <label>Split Source Station: <strong><input type="text" id="s9"></span></strong></label><br>
+        <label>Split Destination Station: <strong><input type="text" id="s10"></span></strong></label><br>
+        </p>
+    </div>
+  </article>
+</main>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCYxMazGHf5ABlNvGXF7LVBia0mKsgX51c",
+    authDomain: "railmitra56.firebaseapp.com",
+    databaseURL: "https://railmitra56.firebaseio.com",
+    projectId: "railmitra56",
+    storageBucket: "railmitra56.appspot.com",
+    messagingSenderId: "1056408353044"
+  };
+  firebase.initializeApp(config);
+  var src;
+   var dest;
+  var date;
+ var auth= firebase.auth();
+ var src01;
+  var dest01;
+ var c;
+ var d;
+ var ddate;
+ var key="***********";
+ var sref= firebase.storage().ref();
+function logout()
+{
+  firebase.auth().signOut().then(function() {
+  window.alert("logout successfull.");
+  window.location = "index.html";
+}, function(error) {
+  console.log(error);
+  // An error happened.
+});
+}
+function initApp(){
+var name,uid;
+var user = auth.currentUser;
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+console.log("Authenticated user with uid:", user.uid);  
+firebase.database().ref().child('users').orderByChild('id').equalTo(user.uid).once('value').then(function(snapshot) {
+ snapshot.forEach(function(childSnapshot) {
+        var key = childSnapshot.key;
+        var childData = childSnapshot.val();
+        console.log(childData);
+        document.getElementById("displayUser").innerHTML=childData.name;
+    });
+});
+}
+else {
+
+  }
+});
+
+}
+$("innput").on("change", function() {
+    this.setAttribute(
+        "data-date",
+        moment(this.value, "YYYY-MM-DD")
+        .format( this.getAttribute("data-date-format") )
+    )
+}).trigger("change")
+  function myFunction(elementId) {
+     document.getElementById('maindiv').style.display = "none";
+     document.getElementById('updatediv').style.display = "none";
+     document.getElementById('planjourney').style.display = "none";
+     document.getElementById('bookinghistory').style.display = "none";
+     document.getElementById(elementId).style.display = "block";
+}
+function maindiv()
+{
+
+}
+function refreshh()
+{firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+     var uuid=user.uid;
+  firebase.database().ref().child('bookinghistory').once('value').then(function(snapshot) {
+ snapshot.forEach(function(userSnapshot) {
+    var d1=userSnapshot.val().Source;
+var d2=userSnapshot.val().SplitNewDestination;
+var d3=userSnapshot.val().destination;
+var d4=userSnapshot.val().dateoftravel;
+var d5=userSnapshot.val().quota;
+var d6=userSnapshot.val().trainnumber;
+var d7=userSnapshot.val().classs;
+var d8=userSnapshot.val().SugSrc;
+var d9=userSnapshot.val().SugDest;
+var d10=userSnapshot.val().SplitNewSource;
+ console.log(d1,d2,d3,d4,d5,d6,d7,d8,d9,d10);
+  document.getElementById('s1').value=d1;
+  document.getElementById('s2').value=d3;
+  document.getElementById('s3').value=d4;
+  document.getElementById('s4').value=d5;
+  document.getElementById('s5').value=d6;
+  document.getElementById('s6').value=d7;
+  document.getElementById('s7').value=d8;
+  document.getElementById('s8').value=d9;
+  document.getElementById('s9').value=d10;
+  document.getElementById('s10').value=d2;
+  });
+ });
+}else{
+   alert("No user signed in.");
+
+}
+});
+}
+function update()
+ {
+  
+ }
+
+ function trainlist()
+ {var src1;
+  var ff;
+  var osrc=document.getElementById('srcstn').value;
+  var odest=document.getElementById('desstn').value;
+  var dest1;
+  var src1c=document.getElementById('srcstn').value;
+  var ccg=src1c.toUpperCase();
+  var rkg=document.getElementById('desstn').value;
+  var rrkg=rkg.toUpperCase();
+  var dest1c;
+  var rr;
+  var cc;
+  var ndate=document.getElementById('doj').value;
+  var ncls=document.getElementById('quota').value;
+  var nqto=document.getElementById('class').value;
+  var ii;
+  var tno=document.getElementById('tno').value;
+  var url="https://api.railwayapi.com/v2/route/train/"+tno+"/apikey/"+key+"/";
+  var options = "";
+  $.getJSON(url,function(data){
+        console.log(data);      
+           data.route.forEach(function(route){
+            cc=route.station.code;
+            if(cc==ccg){
+              var s=route.no;
+             ff=s+1
+              console.log(s);
+            }
+            if(rrkg==cc)
+            {
+              ii=route.no;
+              rr=ii-1;
+              console.log(rr)
+            }
+          });
+             data.route.forEach(function(route){
+             if(route.no == rr){
+            document.getElementById("destn").innerHTML=route.station.name;
+            document.getElementById("destc").innerHTML=route.station.code;
+            dest01=route.station.code;
+            console.log(dest01);
+            return dest01;
+           }
+            if(route.no == ff)
+               {
+               document.getElementById("srcn").innerHTML=route.station.name;
+               document.getElementById("srcc").innerHTML=route.station.code;
+               src01=route.station.code;
+               console.log(src01);
+               return src01;
+              }
+  });
+              });
+document.getElementById('osrc').innerHTML=osrc;
+document.getElementById('odest').innerHTML=odest;
+             }
+
+function seat2(){
+var tno=document.getElementById('tno').value;
+var date=document.getElementById('doj').value;
+var ncls=document.getElementById('class').value;
+var nqto=document.getElementById('quota').value;
+var sr01=document.getElementById('src11').value;
+var des01=document.getElementById('dest11').value;
+var url="https://api.railwayapi.com/v2/check-seat/train/"+tno+"/source/"+sr01+"/dest/"+des01+"/date/"+date+"/pref/"+ncls+"/quota/"+nqto+"/apikey/"+key+"/"; 
+var options = "";
+console.log(url);
+$.getJSON(url,function(data){
+        console.log(data);
+        if(data.response_code  >=200 && data.response_code < 400){
+        data.availability.forEach(function(availability){
+            options = "<tr><td>"+availability.date+"</td><td>" + availability.status+"</td></tr>"; 
+            // $('#train-block').append(options + "<br>");
+            $('#seatdetails2 tbody').append(options);
+        });
+        }
+        else{
+        alert("server error please try after sometime.")
+         }
+        });
+
+}
+function seat3(){
+
+var tno=document.getElementById('tno').value;
+var date=document.getElementById('doj').value;
+var ncls=document.getElementById('class').value;
+var nqto=document.getElementById('quota').value;
+var sr01=document.getElementById('src12').value;
+var des01=document.getElementById('dest12').value;
+ 
+var url="https://api.railwayapi.com/v2/check-seat/train/"+tno+"/source/"+sr01+"/dest/"+des01+"/date/"+date+"/pref/"+ncls+"/quota/"+nqto+"/apikey/"+key+"/"; 
+var options = "";
+console.log(url);
+$.getJSON(url,function(data){
+        console.log(data);
+        if(data.response_code  >=200 && data.response_code < 400){
+        data.availability.forEach(function(availability){
+            options = "<tr><td>"+availability.date+"</td><td>" + availability.status+"</td></tr>"; 
+            // $('#train-block').append(options + "<br>");
+            $('#seatdetails3 tbody').append(options);
+        });
+        }
+        else{
+        alert("server error please try after sometime.")
+         }
+        });
+
+}
+
+
+function planj()
+{
+  src=document.getElementById('srcstn').value;
+  dest=document.getElementById('desstn').value;
+  date=document.getElementById('doj').value;
+  ddate=date;
+  var url="https://api.railwayapi.com/v2/between/source/"+src+"/dest/"+dest+"/date/"+date+"/apikey/"+key+"/"
+  console.log(date,src,dest,url);
+  var options = "";
+  var options1=" ";
+   if(src == 0|| dest == 0 || date==0)
+  {
+    alert("Please fill the input fields");
+  }
+  $.getJSON(url,function(data){
+        console.log(data);
+        console.log(data.response_code)
+        if(data.response_code  >=200 && data.response_code < 400){
+        data.trains.forEach(function(trains){
+            console.log(data.trains)
+ options = "<tr><td>"+trains.number+"</td><td>" + trains.name+"</td><td>"+trains.src_departure_time+"</td><td>"+trains.dest_arrival_time+"</td></tr>"; 
+            $('#traindetails tbody').append(options);
+             
+        });
+      }
+         else
+            {
+              alert("server error please try after sometime.")
+            }
+    });
+
+}
+function savejourney()
+{
+var src=document.getElementById('srcstn').value;
+var dest=document.getElementById('desstn').value;
+var tno=document.getElementById('tno').value;
+var date=document.getElementById('doj').value;
+var cls=document.getElementById('class').value;
+var qto=document.getElementById('quota').value;
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+var Ref=firebase.database().ref().child("bookinghistory");
+var newActivity={"Source":src,"userid":user.uid,"destination":dest,"trainnumber":tno,"dateoftravel":date,"classs":cls,"quota":qto,"SplitNewSource":d,"SplitNewDestination":c,"SugSrc":a,"SugDest":b};
+  Ref.child(user.uid).set(newActivity, function(err){
+    if(err)
+    {
+      console.log(err);
+        }
+        else{
+          console.log("data updated");
+        }
+  })
+}
+});
+
+
+}
+
+function seatsfunction()
+{
+var tnoo=document.getElementById('tno').value;
+var datee=document.getElementById('doj').value;
+var src11=document.getElementById('srcstn').value;
+var dest11=document.getElementById('desstn').value;
+var clss=document.getElementById('class').value;
+var qtoo=document.getElementById('quota').value;
+var url="https://api.railwayapi.com/v2/check-seat/train/"+tnoo+"/source/"+src11+"/dest/"+dest11+"/date/"+datee+"/pref/"+clss+"/quota/"+qtoo+"/apikey/"+key+"/"; 
+var options = "";
+$.getJSON(url,function(data){
+        console.log(data);
+        if(data.response_code  >=200 && data.response_code < 400){
+        data.availability.forEach(function(availability){
+            options = "<tr><td>"+availability.date+"</td><td>" + availability.status+"</td></tr>"; 
+            // $('#train-block').append(options + "<br>");
+            $('#seatdetails tbody').append(options);
+        });
+        }
+        else{
+        alert("server error please try after sometime.")
+         }
+        });
+
+}
+function splitj(){
+  var tno=document.getElementById('tno').value;
+  var x;
+  var cc;
+  var s;
+  var src1c=document.getElementById('srcstn').value;
+  var ccg=src1c.toUpperCase();
+  var rkg=document.getElementById('desstn').value;
+  var rrkg=rkg.toUpperCase();
+  var date1=document.getElementById('doj').value;
+  var class1=document.getElementById('class').value;
+  var quota1=document.getElementById('quota').value;
+  var o;
+  var gg;
+  var m;
+  var k;
+  var url="https://api.railwayapi.com/v2/route/train/"+tno+"/apikey/"+key+"/";
+  var options = "";
+  $.getJSON(url,function(data){
+        console.log(data);
+        data.route.forEach(function(route){
+           cc=route.station.code;
+            if(cc==ccg){
+              s=route.no-1;
+              console.log(s);
+            }
+            if(cc==rrkg){
+              k=route.no;
+              console.log(k);
+            }
+            x=k-s;
+            gg=Math.round(x/2);
+            o=s+gg;
+            m=o+1;
+            console.log(gg,o,m)
+          });
+        data.route.forEach(function(route){
+           if(o == route.no){
+            console.log(route.station.name);
+            document.getElementById("ndest").innerHTML=route.station.name;
+            document.getElementById("ndestc").innerHTML=route.station.code;
+            c=route.station.code
+           }
+            if (route.no==m) {
+            document.getElementById("nsrc").innerHTML=route.station.name;
+            document.getElementById("nsrcc").innerHTML=route.station.code;
+            d=route.station.code;
+          }
+});
+});
+  
+}
+function reset1(){
+  window.location.reload()}
+function reset2(){
+  window.location.reload()
+}
+function reset3(){
+window.location.reload()
+} 
+window.onload = function() {
+  
+      initApp();
+      event.preventDefault();
+document.getElementById('search').addEventListener('click', planj);
+document.getElementById('updated').addEventListener('click', update);
+document.getElementById('seatsrch').addEventListener('click',seatsfunction);
+document.getElementById('sug').addEventListener('click',trainlist);
+document.getElementById('savej').addEventListener('click',savejourney);
+document.getElementById('split').addEventListener('click',splitj);
+document.getElementById('refreshh').addEventListener('click',refreshh);
+document.getElementById('seat3').addEventListener('click',seat3);
+document.getElementById('seat2').addEventListener('click',seat2);
+document.getElementById('reset1').addEventListener('click', reset1);
+$('input[type="date"]').change(function(){
+   alert(this.value.split("-").reverse().join("-")); 
+});
+    };
+</script>
+</body>
+</html>
